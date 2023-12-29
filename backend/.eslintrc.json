@@ -15,6 +15,7 @@
         "react"
     ],
     "rules": {
-        "@typescript-eslint/semi": "off"
+        "@typescript-eslint/semi": "off",
+        "@typescript-eslint/comma-dangle": "off"
     }
 }
