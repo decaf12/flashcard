@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import app from './server';
 
@@ -7,13 +7,16 @@ dotenv.config();
 const port = process.env.PORT ?? 8000;
 
 if (process.env.CONNECTION_STRING !== null && process.env.CONNECTION_STRING !== undefined) {
-  MongoClient.connect(
+  mongoose.connect(
     process.env.CONNECTION_STRING,
     {
       maxPoolSize: 50,
       waitQueueTimeoutMS: 2500,
+      retryWrites: true,
+      w: 'majority',
+      dbName: 'flashcard',
     }
-  ).then(async (client: MongoClient) => {
+  ).then(async () => {
     app.listen(port, () => {
       console.log(`Listening on port ${port}.`);
     });
