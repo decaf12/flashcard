@@ -12,7 +12,7 @@ const deckSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-deckSchema.index({ deckId: 'asc', deckName: 'asc' }, { unique: true });
+deckSchema.index({ topicId: 'asc', deckName: 'asc' }, { unique: true });
 
 export default mongoose.model('Deck', deckSchema);
 export type Deck = InferSchemaType<typeof deckSchema> & mongoose.Document;

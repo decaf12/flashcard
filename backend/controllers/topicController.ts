@@ -13,18 +13,6 @@ export const getAllTopics: RequestHandler = (async (req: Request, res: Response)
   }
 }) as RequestHandler;
 
-export const getTopic: RequestHandler = (async (req: Request, res: Response): Promise<void> => {
-  const { topicId } = req.params;
-  try {
-    const topics = await topicCollection.findOne({ userId: req.user, _id: topicId });
-    res.status(200).json(topics);
-  } catch (err) {
-    if (err instanceof Error) {
-      res.status(400).json({ error: err.message });
-    }
-  }
-}) as RequestHandler;
-
 export const createTopic: RequestHandler = (async (req: Request, res: Response): Promise<void> => {
   const { topicName } = req.body;
 
@@ -59,7 +47,7 @@ export const updateTopic: RequestHandler = (async (req: Request, res: Response):
   const { topicName } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(topicId)) {
-    res.status(404).json({ error: 'No such topic.' });
+    res.status(404).json({ error: 'Invalid topic ID.' });
     return;
   }
 
@@ -85,7 +73,7 @@ export const deleteTopic: RequestHandler = (async (req: Request, res: Response):
   const { topicId } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(topicId)) {
-    res.status(404).json({ error: 'No such topic.' });
+    res.status(404).json({ error: 'Invalid topic ID.' });
     return;
   }
 

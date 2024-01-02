@@ -9,8 +9,6 @@ router.use(requireAuth);
 // Topics
 // Get all topics
 router.get('/topics', topicController.getAllTopics);
-// Get a particular topic
-router.get('/topics/:topicId', topicController.getTopic);
 // Add a new topic
 router.post('/topics', topicController.createTopic);
 // Rename topic
@@ -19,15 +17,23 @@ router.patch('/topics/:topicId', topicController.updateTopic);
 router.delete('/topics/:topicId', topicController.deleteTopic);
 
 // Decks
-// Get all decks
+// Get all decks for a given topic
 router.get('/topics/:topicId/decks', deckController.getAllDecks);
-// Get a particular deck
-router.get('/topics/:topicId/decks/:deckId', deckController.getDeck);
 // Add a deck
 router.post('/topics/:topicId/decks', deckController.createDeck);
 // Rename a deck
 router.patch('/topics/:topicId/decks/:deckId', deckController.updateDeck);
 // Delete a deck
 router.delete('/topics/:topicId/decks/:deckId', deckController.deleteDeck);
+
+// // Cards
+// // Get all cards for a given deck
+// router.get('/topics/:topicId/decks/:deckId', deckController.getAllDecks);
+// // Add card
+// router.post('/topics/:topicId/decks', deckController.createDeck);
+// // Rename a card
+// router.patch('/topics/:topicId/decks/:deckId', deckController.updateDeck);
+// // Delete a card
+// router.delete('/topics/:topicId/decks/:deckId', deckController.deleteDeck);
 
 export default router;
