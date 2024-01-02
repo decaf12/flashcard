@@ -1,8 +1,9 @@
+import { ObjectId } from 'mongodb';
 import mongoose, { type InferSchemaType } from 'mongoose';
 
 const topicSchema = new mongoose.Schema({
   userId: {
-    type: String,
+    type: ObjectId,
     required: true,
   },
   topicName: {

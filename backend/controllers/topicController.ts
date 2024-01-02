@@ -1,11 +1,22 @@
 import { type RequestHandler, type Request, type Response } from 'express';
 import topicCollection from '../models/topicModel';
 import mongoose from 'mongoose';
-import { MongoError } from 'mongodb';
 
-export const getTopics: RequestHandler = (async (req: Request, res: Response): Promise<void> => {
+export const getAllTopics: RequestHandler = (async (req: Request, res: Response): Promise<void> => {
   try {
-    const topics = await topicCollection.find({}).select('topicName').sort({ topicName: 'asc' });
+    const topics = await topicCollection.find({ userId: req.user });
+    res.status(200).json(topics);
+  } catch (err) {
+    if (err instanceof Error) {
+      res.status(400).json({ error: err.message });
+    }
+  }
+}) as RequestHandler;
+
+export const getTopic: RequestHandler = (async (req: Request, res: Response): Promise<void> => {
+  const { topicId } = req.params;
+  try {
+    const topics = await topicCollection.findOne({ userId: req.user, _id: topicId });
     res.status(200).json(topics);
   } catch (err) {
     if (err instanceof Error) {
@@ -15,7 +26,7 @@ export const getTopics: RequestHandler = (async (req: Request, res: Response): P
 }) as RequestHandler;
 
 export const createTopic: RequestHandler = (async (req: Request, res: Response): Promise<void> => {
-  const { userId, topicName } = req.body;
+  const { topicName } = req.body;
 
   if (topicName === '') {
     res.status(400).json({
@@ -25,7 +36,7 @@ export const createTopic: RequestHandler = (async (req: Request, res: Response):
   };
 
   try {
-    const newTopic = await topicCollection.create({ userId, topicName });
+    const newTopic = await topicCollection.create({ userId: req.user, topicName });
     res.status(200).json(newTopic);
   } catch (err) {
     if (err instanceof Error) {
@@ -44,21 +55,53 @@ export const createTopic: RequestHandler = (async (req: Request, res: Response):
 }) as RequestHandler;
 
 export const updateTopic: RequestHandler = (async (req: Request, res: Response): Promise<void> => {
-  const { topicId, topicName }: { topicId: string, topicName: string } = req.body;
+  const { topicId } = req.params;
+  const { topicName } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(topicId)) {
     res.status(404).json({ error: 'No such topic.' });
     return;
   }
 
-  const updatedTopic = await topicCollection.findOneAndUpdate(
-    { _id: topicId },
-    { topicName },
-  );
+  try {
+    const topicPreUpdate = await topicCollection.findOneAndUpdate(
+      { _id: topicId },
+      { topicName },
+    );
 
-  if (updatedTopic !== null) {
-    res.status(200).json(updateTopic);
-  } else {
+    if (topicPreUpdate !== null) {
+      res.status(200).json(topicPreUpdate);
+    } else {
+      res.status(404).json({ error: 'No such topic.' });
+    }
+  } catch (err) {
+    if (err instanceof Error) {
+      res.status(400).json({ error: err.message });
+    }
+  }
+}) as RequestHandler;
+
+export const deleteTopic: RequestHandler = (async (req: Request, res: Response): Promise<void> => {
+  const { topicId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(topicId)) {
     res.status(404).json({ error: 'No such topic.' });
+    return;
+  }
+
+  try {
+    const deletedTopic = await topicCollection.findOneAndDelete(
+      { _id: topicId },
+    );
+
+    if (deletedTopic !== null) {
+      res.status(200).json(deletedTopic);
+    } else {
+      res.status(404).json({ error: 'No such topic.' });
+    }
+  } catch (err) {
+    if (err instanceof Error) {
+      res.status(400).json({ error: err.message });
+    }
   }
 }) as RequestHandler;
