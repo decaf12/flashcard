@@ -1,8 +1,8 @@
-import mongoose, { type InferSchemaType } from 'mongoose';
+import { Schema, model, type Document, type InferSchemaType } from 'mongoose';
 import { compare, genSalt, hash } from 'bcrypt';
 import validator from 'validator';
 
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
   username: {
     type: String,
     required: true,
@@ -60,5 +60,5 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-export default mongoose.model('User', userSchema);
-export type User = InferSchemaType<typeof userSchema> & mongoose.Document;
+export default model('User', userSchema);
+export type User = InferSchemaType<typeof userSchema> & Document;

@@ -1,6 +1,7 @@
 import { type RequestHandler, type Request, type Response } from 'express';
 import deckCollection from '../models/deckModel';
 import topicCollection from '../models/topicModel';
+import isFilled from '../utilities/isFilled';
 import mongoose from 'mongoose';
 
 export const getAllDecks: RequestHandler = (async (req: Request, res: Response): Promise<void> => {
@@ -23,6 +24,14 @@ export const getAllDecks: RequestHandler = (async (req: Request, res: Response):
 
 export const createDeck: RequestHandler = (async (req: Request, res: Response): Promise<void> => {
   const { topicId } = req.params;
+  const { deckName }: { deckName: string } = req.body;
+
+  if (!isFilled(deckName)) {
+    res.status(400).json({
+      error: 'Please provide a deck name.',
+    });
+    return;
+  }
 
   try {
     const topicMatches = await topicCollection.countDocuments({ userId: req.user?._id, _id: topicId });
@@ -30,7 +39,7 @@ export const createDeck: RequestHandler = (async (req: Request, res: Response): 
       throw new Error('Topic not found for this user.');
     }
 
-    const newDeck = await deckCollection.create({ topicId, deckName: req.body.deckName });
+    const newDeck = await deckCollection.create({ topicId, deckName });
     res.status(200).json(newDeck);
   } catch (err) {
     if (err instanceof Error) {

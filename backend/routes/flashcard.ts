@@ -29,9 +29,9 @@ router.delete('/topics/:topicId/decks/:deckId', deckController.deleteDeck);
 
 // // Cards
 // Get all cards for a given deck
-router.get('/topics/:topicId/decks/:deckId', cardController.getAllCards);
+router.get('/topics/:topicId/decks/:deckId/cards', cardController.getAllCards);
 // Add card
-router.post('/topics/:topicId/decks/:deckId', cardController.createCard);
+router.post('/topics/:topicId/decks/:deckId/cards', cardController.createCard);
 // Update a card
 router.patch('/topics/:topicId/decks/:deckId/cards/:cardId', cardController.updateCard);
 // Delete a card

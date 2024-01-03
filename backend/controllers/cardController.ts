@@ -2,6 +2,7 @@ import { type RequestHandler, type Request, type Response } from 'express';
 import cardCollection from '../models/cardModel';
 import deckCollection from '../models/deckModel';
 import topicCollection from '../models/topicModel';
+import isFilled from '../utilities/isFilled';
 import mongoose from 'mongoose';
 
 export const getAllCards: RequestHandler = (async (req: Request, res: Response): Promise<void> => {
@@ -9,12 +10,12 @@ export const getAllCards: RequestHandler = (async (req: Request, res: Response):
 
   try {
     const deck = await deckCollection.findById(deckId);
-    if (deck === null || deck.topicId !== topicId) {
+    if (deck === null || !deck.topicId.equals(topicId)) {
       throw new Error('No such deck exists for this topic.');
     }
 
     const topic = await topicCollection.findById(deck.topicId);
-    if (topic === null || topic.userId !== req.user?._id) {
+    if (topic === null || !topic.userId.equals(req.user?._id)) {
       throw new Error('No such topic exists for this user.');
     }
 
@@ -29,16 +30,20 @@ export const getAllCards: RequestHandler = (async (req: Request, res: Response):
 
 export const createCard: RequestHandler = (async (req: Request, res: Response): Promise<void> => {
   const { topicId, deckId } = req.params;
-  const { question, answer } = req.body;
+  const { question, answer }: { question: string, answer: string } = req.body;
+
+  if (!isFilled(question) || !isFilled(answer)) {
+    res.json(400).json({ error: 'Fill out both sides of the card.' });
+  }
 
   try {
     const deck = await deckCollection.findById(deckId);
-    if (deck === null || deck.topicId !== topicId) {
+    if (deck === null || !deck.topicId.equals(topicId)) {
       throw new Error('No such deck exists for this topic.');
     }
 
     const topic = await topicCollection.findById(deck.topicId);
-    if (topic === null || topic.userId !== req.user?._id) {
+    if (topic === null || !topic.userId.equals(req.user?._id)) {
       throw new Error('No such topic exists for this user.');
     }
 
@@ -61,18 +66,13 @@ export const updateCard: RequestHandler = (async (req: Request, res: Response): 
   }
 
   try {
-    const card = await cardCollection.findById(cardId);
-    if (card === null || card.deckId !== deckId) {
-      throw new Error('No such card exists for this deck.')
-    }
-
     const deck = await deckCollection.findById(deckId);
-    if (deck === null || deck.topicId !== topicId) {
+    if (deck === null || !deck.topicId.equals(topicId)) {
       throw new Error('No such deck exists for this topic.');
     }
 
     const topic = await topicCollection.findById(deck.topicId);
-    if (topic === null || topic.userId !== req.user?._id) {
+    if (topic === null || !topic.userId.equals(req.user?._id)) {
       throw new Error('No such topic exists for this user.');
     }
 
@@ -102,18 +102,13 @@ export const deleteCard: RequestHandler = (async (req: Request, res: Response): 
   }
 
   try {
-    const card = await cardCollection.findById(cardId);
-    if (card === null || card.deckId !== deckId) {
-      throw new Error('No such card exists for this deck.')
-    }
-
     const deck = await deckCollection.findById(deckId);
-    if (deck === null || deck.topicId !== topicId) {
+    if (deck === null || !deck.topicId.equals(topicId)) {
       throw new Error('No such deck exists for this topic.');
     }
 
     const topic = await topicCollection.findById(deck.topicId);
-    if (topic === null || topic.userId !== req.user?._id) {
+    if (topic === null || !topic.userId.equals(req.user?._id)) {
       throw new Error('No such topic exists for this user.');
     }
 

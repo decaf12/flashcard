@@ -1,9 +1,8 @@
-import { ObjectId } from 'mongodb';
-import mongoose, { type InferSchemaType } from 'mongoose';
+import { Schema, model, type Document, type InferSchemaType } from 'mongoose';
 
-const topicSchema = new mongoose.Schema({
+const topicSchema = new Schema({
   userId: {
-    type: ObjectId,
+    type: Schema.Types.ObjectId,
     required: true,
   },
   topicName: {
@@ -14,5 +13,5 @@ const topicSchema = new mongoose.Schema({
 
 topicSchema.index({ userId: 'asc', topicName: 'asc' }, { unique: true });
 
-export default mongoose.model('Topic', topicSchema);
-export type Topic = InferSchemaType<typeof topicSchema> & mongoose.Document;
+export default model('Topic', topicSchema);
+export type Topic = InferSchemaType<typeof topicSchema> & Document;

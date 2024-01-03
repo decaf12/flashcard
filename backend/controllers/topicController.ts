@@ -1,5 +1,6 @@
 import { type RequestHandler, type Request, type Response } from 'express';
 import topicCollection from '../models/topicModel';
+import isFilled from '../utilities/isFilled';
 import mongoose from 'mongoose';
 
 export const getAllTopics: RequestHandler = (async (req: Request, res: Response): Promise<void> => {
@@ -14,9 +15,9 @@ export const getAllTopics: RequestHandler = (async (req: Request, res: Response)
 }) as RequestHandler;
 
 export const createTopic: RequestHandler = (async (req: Request, res: Response): Promise<void> => {
-  const { topicName } = req.body;
+  const { topicName }: { topicName: string } = req.body;
 
-  if (topicName === '') {
+  if (!isFilled(topicName)) {
     res.status(400).json({
       error: 'Please provide a title name.',
     });

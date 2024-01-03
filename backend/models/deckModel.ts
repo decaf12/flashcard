@@ -1,9 +1,8 @@
-import { ObjectId } from 'mongodb';
-import mongoose, { type InferSchemaType } from 'mongoose';
+import { Schema, model, type Document, type InferSchemaType } from 'mongoose';
 
-const deckSchema = new mongoose.Schema({
+const deckSchema = new Schema({
   topicId: {
-    type: ObjectId,
+    type: Schema.Types.ObjectId,
     required: true,
   },
   deckName: {
@@ -14,5 +13,5 @@ const deckSchema = new mongoose.Schema({
 
 deckSchema.index({ topicId: 'asc', deckName: 'asc' }, { unique: true });
 
-export default mongoose.model('Deck', deckSchema);
-export type Deck = InferSchemaType<typeof deckSchema> & mongoose.Document;
+export default model('Deck', deckSchema);
+export type Deck = InferSchemaType<typeof deckSchema> & Document;
