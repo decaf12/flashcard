@@ -74,7 +74,7 @@ export const updateCard: RequestHandler = (async (req: Request, res: Response): 
   try {
     const card = await cardCollection.findById(cardId);
     if (card === null || !card.deckId.equals(deckId)) {
-      throw new Error('No such card  exists for this deck.');
+      throw new Error('No such card exists for this deck.');
     }
 
     const deck = await deckCollection.findById(deckId);
@@ -115,7 +115,7 @@ export const deleteCard: RequestHandler = (async (req: Request, res: Response): 
   try {
     const card = await cardCollection.findById(cardId);
     if (card === null || !card.deckId.equals(deckId)) {
-      throw new Error('No such card  exists for this deck.');
+      throw new Error('No such card exists for this deck.');
     }
 
     const deck = await deckCollection.findById(deckId);
