@@ -1,23 +1,35 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import React from 'react';
+import { useAuthContext } from './hooks/useAuthContext';
+import Topics from './pages/Home';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Navbar from './components/Navbar';
 
 function App() {
+  const { loggedInAs } = useAuthContext();
+  console.log('User: ', loggedInAs);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <BrowserRouter>
+        <Navbar />
+        <div className="pages">
+          <Routes>
+            <Route
+              path='/'
+              element={loggedInAs ? <Topics /> : <Navigate to='login' />}
+            />
+            <Route
+              path='/login'
+              element={!loggedInAs ? <Login /> : <Navigate to='/' />}
+            />
+            <Route
+              path='/signup'
+              element={!loggedInAs ? <Signup /> : <Navigate to='/' />}
+            />
+          </Routes>
+        </div>
+      </BrowserRouter>
     </div>
   );
 }
