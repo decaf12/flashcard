@@ -3,7 +3,6 @@ import { useAuthContext } from './hooks/useAuthContext';
 import Topics from './pages/Topics';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import Navbar from './components/Navbar';
 
 function App() {
   const { loggedInAs } = useAuthContext();
@@ -12,7 +11,7 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <Navbar />
+        {/* <Navbar /> */}
         <div className="pages">
           <Routes>
             <Route
