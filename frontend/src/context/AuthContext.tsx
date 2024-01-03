@@ -1,9 +1,4 @@
 import React, { PropsWithChildren, Reducer, createContext, useReducer, useEffect } from 'react';
-import { User } from '../../../backend/models/userModel';
-
-type State = {
-  loggedInAs: string | null,
-}
 
 export const enum AuthActionType {
   LOGIN,
@@ -20,28 +15,26 @@ export const AuthContext = createContext({
   dispatch: ((_: Action) => {}) as React.Dispatch<Action>,
 });
 
-export const authReducer = ((state: State, action: Action): State => {
+export const authReducer = ((state: string | null, action: Action): string | null => {
   switch (action.type) {
-    case AuthActionType.LOGIN:
-      return {
-        loggedInAs: action.payload,
-      };
+    case AuthActionType.LOGIN: {
+      return action.payload as string;
+    }
     
-    case AuthActionType.LOGOUT:
-      return { loggedInAs: null };
+    case AuthActionType.LOGOUT: {
+      return null;
+    }
     
     default:
       return state;
   }
-}) as Reducer<State, Action>;
+}) as Reducer<string | null, Action>;
 
 /* Provides the current user as a context accessible to the entire app,
   and a function for modifying the current user.
   This function outsources its logic to a reducer. */
 export const AuthContextProvider = ({ children }: PropsWithChildren) => {
-  const [state, dispatch] = useReducer<Reducer<State, Action>>(authReducer, {
-    loggedInAs: null,
-  });
+  const [loggedInAs, dispatch] = useReducer<Reducer<string | null, Action>>(authReducer, null);
 
   /* Upon visiting the site, if the JSON web token from the last visit
     is still valid, then log in the user.
@@ -71,10 +64,10 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
     });
   }, []);
 
-  console.log('AuthContext state: ', state);
+  console.log('AuthContext state: ', loggedInAs);
 
   return (
-    <AuthContext.Provider value={{ ...state, dispatch }}>
+    <AuthContext.Provider value={{ loggedInAs, dispatch }}>
       { children }
     </AuthContext.Provider>
   );
