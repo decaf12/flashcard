@@ -7,8 +7,8 @@ export const getAllDecks: RequestHandler = (async (req: Request, res: Response):
   const { topicId } = req.params;
 
   try {
-    const topicCount = await topicCollection.countDocuments({ userId: req.user?._id, _id: topicId });
-    if (topicCount === 0) {
+    const topicMatches = await topicCollection.countDocuments({ userId: req.user?._id, _id: topicId });
+    if (topicMatches === 0) {
       throw new Error('Topic not found for this user.');
     }
 
@@ -25,8 +25,8 @@ export const createDeck: RequestHandler = (async (req: Request, res: Response): 
   const { topicId } = req.params;
 
   try {
-    const topicCount = await topicCollection.countDocuments({ userId: req.user?._id, _id: topicId });
-    if (topicCount === 0) {
+    const topicMatches = await topicCollection.countDocuments({ userId: req.user?._id, _id: topicId });
+    if (topicMatches === 0) {
       throw new Error('Topic not found for this user.');
     }
 
@@ -49,13 +49,13 @@ export const updateDeck: RequestHandler = (async (req: Request, res: Response): 
   }
 
   try {
-    const topicCount = await topicCollection.countDocuments({ userId: req.user?._id, _id: topicId });
-    if (topicCount === 0) {
+    const topicMatches = await topicCollection.countDocuments({ userId: req.user?._id, _id: topicId });
+    if (topicMatches === 0) {
       throw new Error('Topic not found for this user.');
     }
 
     const deckPreUpdate = await deckCollection.findOneAndUpdate(
-      { _id: deckId },
+      { _id: deckId, topicId },
       { deckName },
     );
 
@@ -80,14 +80,14 @@ export const deleteDeck: RequestHandler = (async (req: Request, res: Response): 
   }
 
   try {
-    const topicCount = await topicCollection.countDocuments({ userId: req.user?._id, _id: topicId });
+    const topicMatches = await topicCollection.countDocuments({ userId: req.user?._id, _id: topicId });
 
-    if (topicCount === 0) {
+    if (topicMatches === 0) {
       throw new Error('Topic not found for this user.');
     }
 
     const deletedDeck = await deckCollection.findOneAndDelete(
-      { _id: deckId },
+      { _id: deckId, topicId },
     );
 
     if (deletedDeck !== null) {
