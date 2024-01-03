@@ -5,17 +5,17 @@ import AuthHttpRequest from  '../httpRequests/auth';
 import { User } from '../../../backend/models/userModel';
 import { AuthActionType } from '../context/AuthContext';
 
-export const useLogin = () => {
+export const useSignup = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const { dispatch } = useAuthContext();
 
-  const login = async (username: string, password: string) => {
+  const signup = async (username: string, password: string) => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const response = await AuthHttpRequest.login({ username, password } as User);
+      const response = await AuthHttpRequest.signup({ username, password } as User);
       // Save user to local storage
       localStorage.setItem('user', JSON.stringify(response.data));
       dispatch({
@@ -31,5 +31,5 @@ export const useLogin = () => {
     }
   };
 
-  return { login, isLoading, error };
+  return { signup, isLoading, error };
 };

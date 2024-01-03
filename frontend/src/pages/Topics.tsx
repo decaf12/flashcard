@@ -1,21 +1,29 @@
 import { useEffect, useState } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
+import { useTopicListContext } from '../hooks/useTopicListContext';
 import { type Topic } from '../../../backend/models/topicModel';
 import TopicListHttpRequest from '../httpRequests/topics';
+import { TopicListActionType } from '../context/TopicListContext';
 
 const Topics = () => {
   const { loggedInAs } = useAuthContext();
-  const [topicList, setTopicList] = useState([] as Topic[]);
+  const { topics, dispatch: dispatchTopicList } = useTopicListContext();
 
-  const handleTopicDeletion = (id: string) => {
-    setTopicList(topicList.filter((topic) => topic._id !== id));
+  const handleTopicDeletion = (topic: Topic) => {
+    dispatchTopicList({
+      type: TopicListActionType.DELETE_TOPIC,
+      payload: [topic],
+    });
   }
 
   useEffect(() => {
     const fetchTopics = async () => {
       try {
         const response = await TopicListHttpRequest.getAll();
-        setTopicList(response.data);
+        dispatchTopicList({
+          type: TopicListActionType.SET_TOPICS,
+          payload: response.data,
+        });
       } catch (e) {
         e instanceof Error && console.log(e);
       };
@@ -24,13 +32,13 @@ const Topics = () => {
     if (loggedInAs) {
       fetchTopics();
     }
-  }, [loggedInAs]);
+  }, [loggedInAs, dispatchTopicList]);
 
   return (
     <div className="home">
       <div className="workouts">
-        { topicList && topicList.map((topic) => (
-          <TopicDetails key={topic._id} topic={topic} updateTopicList={() => handleTopicDeletion(topic._id)} />
+        { topics && topics.map((topic) => (
+          <TopicDetails key={topic._id} topic={topic} updateTopicList={() => handleTopicDeletion(topic)} />
         ))}
       </div>
       <WorkoutForm />
