@@ -53,7 +53,7 @@ export const updateTopic: RequestHandler = (async (req: Request, res: Response):
 
   try {
     const topicPreUpdate = await topicCollection.findOneAndUpdate(
-      { _id: topicId },
+      { _id: topicId, userId: req.user?._id },
       { topicName },
     );
 
@@ -79,7 +79,7 @@ export const deleteTopic: RequestHandler = (async (req: Request, res: Response):
 
   try {
     const deletedTopic = await topicCollection.findOneAndDelete(
-      { _id: topicId },
+      { _id: topicId, userId: req.user?._id },
     );
 
     if (deletedTopic !== null) {
