@@ -1,6 +1,7 @@
 import express from 'express';
 import * as topicController from '../controllers/topicController';
 import * as deckController from '../controllers/deckController';
+import * as cardController from '../controllers/cardController';
 import requireAuth from '../middleware/requireAuth';
 
 const router = express.Router();
@@ -27,13 +28,13 @@ router.patch('/topics/:topicId/decks/:deckId', deckController.updateDeck);
 router.delete('/topics/:topicId/decks/:deckId', deckController.deleteDeck);
 
 // // Cards
-// // Get all cards for a given deck
-// router.get('/topics/:topicId/decks/:deckId', deckController.getAllDecks);
-// // Add card
-// router.post('/topics/:topicId/decks', deckController.createDeck);
-// // Rename a card
-// router.patch('/topics/:topicId/decks/:deckId', deckController.updateDeck);
-// // Delete a card
-// router.delete('/topics/:topicId/decks/:deckId', deckController.deleteDeck);
+// Get all cards for a given deck
+router.get('/topics/:topicId/decks/:deckId', cardController.getAllCards);
+// Add card
+router.post('/topics/:topicId/decks/:deckId', cardController.createCard);
+// Update a card
+router.patch('/topics/:topicId/decks/:deckId/cards/:cardId', cardController.updateCard);
+// Delete a card
+router.delete('/topics/:topicId/decks/:deckId/cards/:cardId', cardController.deleteCard);
 
 export default router;
