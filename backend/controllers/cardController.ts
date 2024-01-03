@@ -33,7 +33,8 @@ export const createCard: RequestHandler = (async (req: Request, res: Response): 
   const { question, answer }: { question: string, answer: string } = req.body;
 
   if (!isFilled(question) || !isFilled(answer)) {
-    res.json(400).json({ error: 'Fill out both sides of the card.' });
+    res.status(400).json({ error: 'Fill out both sides of the card.' });
+    return;
   }
 
   try {
@@ -58,7 +59,12 @@ export const createCard: RequestHandler = (async (req: Request, res: Response): 
 
 export const updateCard: RequestHandler = (async (req: Request, res: Response): Promise<void> => {
   const { topicId, deckId, cardId } = req.params;
-  const { question, answer } = req.body;
+  const { question, answer }: { question: string, answer: string } = req.body;
+
+  if (!isFilled(question) || !isFilled(answer)) {
+    res.status(400).json({ error: 'Fill out both sides of the card.' });
+    return;
+  }
 
   if (!mongoose.Types.ObjectId.isValid(cardId)) {
     res.status(404).json({ error: 'No such card.' });
@@ -66,6 +72,11 @@ export const updateCard: RequestHandler = (async (req: Request, res: Response): 
   }
 
   try {
+    const card = await cardCollection.findById(cardId);
+    if (card === null || !card.deckId.equals(deckId)) {
+      throw new Error('No such card  exists for this deck.');
+    }
+
     const deck = await deckCollection.findById(deckId);
     if (deck === null || !deck.topicId.equals(topicId)) {
       throw new Error('No such deck exists for this topic.');
@@ -102,6 +113,11 @@ export const deleteCard: RequestHandler = (async (req: Request, res: Response): 
   }
 
   try {
+    const card = await cardCollection.findById(cardId);
+    if (card === null || !card.deckId.equals(deckId)) {
+      throw new Error('No such card  exists for this deck.');
+    }
+
     const deck = await deckCollection.findById(deckId);
     if (deck === null || !deck.topicId.equals(topicId)) {
       throw new Error('No such deck exists for this topic.');

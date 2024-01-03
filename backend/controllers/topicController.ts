@@ -45,7 +45,14 @@ export const createTopic: RequestHandler = (async (req: Request, res: Response):
 
 export const updateTopic: RequestHandler = (async (req: Request, res: Response): Promise<void> => {
   const { topicId } = req.params;
-  const { topicName } = req.body;
+  const { topicName }: { topicName: string } = req.body;
+
+  if (!isFilled(topicName)) {
+    res.status(400).json({
+      error: 'Please provide a title name.',
+    });
+    return;
+  };
 
   if (!mongoose.Types.ObjectId.isValid(topicId)) {
     res.status(404).json({ error: 'Invalid topic ID.' });

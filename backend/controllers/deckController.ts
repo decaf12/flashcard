@@ -50,7 +50,14 @@ export const createDeck: RequestHandler = (async (req: Request, res: Response): 
 
 export const updateDeck: RequestHandler = (async (req: Request, res: Response): Promise<void> => {
   const { topicId, deckId } = req.params;
-  const { deckName } = req.body;
+  const { deckName }: { deckName: string } = req.body;
+
+  if (!isFilled(deckName)) {
+    res.status(400).json({
+      error: 'Please provide a deck name.',
+    });
+    return;
+  }
 
   if (!mongoose.Types.ObjectId.isValid(deckId)) {
     res.status(404).json({ error: 'Invalid deck ID.' });
