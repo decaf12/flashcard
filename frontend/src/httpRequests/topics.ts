@@ -13,11 +13,11 @@ class TopicListHttpRequest {
   }
 
   updateTopic(data: Topic) {
-    return flashcardHttpRequestBase().patch(`/${data._id}`);
+    return flashcardHttpRequestBase().patch(`/topics/${data._id}`);
   }
 
   deleteTopic(data: Topic) {
-    return flashcardHttpRequestBase().delete(`/${data._id}`);
+    return flashcardHttpRequestBase().delete(`/topics/${data._id}`);
   }
 }
 
