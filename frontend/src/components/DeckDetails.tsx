@@ -1,25 +1,24 @@
-import { MouseEventHandler, useState, FormEvent } from 'react';
-import { type Topic } from '../../../backend/models/topicModel';
+import React, { MouseEventHandler, useState, FormEvent } from 'react';
+import { type Deck } from '../../../backend/models/deckModel';
 import { Link } from 'react-router-dom';
 
-const TopicDetails = ({ topic, onTopicEdit, onTopicDelete: onTopicDeletion }: 
-  { topic: Topic, onTopicEdit: Function, onTopicDelete: MouseEventHandler<HTMLFormElement> }) => {
-  console.log('TopicDetails component received topic: ', topic);
+const DeckDetails = ({ deck, onDeckEdit, onDeckDelete: onDeckDeletion }: 
+  { deck: Deck, onDeckEdit: Function, onDeckDelete: MouseEventHandler<HTMLFormElement> }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [name, setName] = useState(topic.topicName);
-  const [draftName, setDraftName] = useState(topic.topicName);
+  const [name, setName] = useState(deck.deckName);
+  const [draftName, setDraftName] = useState(deck.deckName);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await onTopicEdit({ ...topic, topicName: draftName });
+    await onDeckEdit({ ...deck, deckName: draftName });
     setName(draftName);
     setIsEditing(false);
   };
 
   return (
     <div className="topic-details">
-      { !isEditing
-        ? <Link to={`/${topic._id}/decks`}>
+      { isEditing
+        ? <Link to={`/${deck._id}/decks`}>
             <h4>{name}</h4>
           </Link>
         : <h4>{name}</h4> }
@@ -43,9 +42,9 @@ const TopicDetails = ({ topic, onTopicEdit, onTopicDelete: onTopicDeletion }:
           </form>
         : <span className='material-symbols-outlined' onClick={() => setIsEditing(true)}>edit</span> }
 
-      <span className='material-symbols-outlined' onClick={onTopicDeletion}>delete</span>
+      <span className='material-symbols-outlined' onClick={onDeckDeletion}>delete</span>
     </div>
   );
 };
 
-export default TopicDetails;
+export default DeckDetails;

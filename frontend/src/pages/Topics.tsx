@@ -12,14 +12,26 @@ const Topics = () => {
   const updateTopics = async () => {
     try {
       const response = await TopicListHttpRequest.getAll();
-      console.log('Topic component received response: ', response);
       setTopics(response.data);
     } catch (e) {
       e instanceof Error && console.log(e);
     };
   };
 
-  const handleTopicDeletion = async (topic: Topic) => {
+  const handleTopicAdd = async (newTopic: Topic) => {
+    try {
+      const response = await TopicListHttpRequest.createTopic(newTopic);
+      if (response.status === 200) {
+        await updateTopics();
+      } else {
+        throw new Error();
+      }
+    } catch (err) {
+      console.log('Add failed');
+    }
+  };
+
+  const handleTopicDelete = async (topic: Topic) => {
     try {
       const response = await TopicListHttpRequest.deleteTopic(topic);
       if (response.status === 200) {
@@ -53,9 +65,6 @@ const Topics = () => {
     }
   }, [loggedInAs]);
 
-  console.log('Topic page logged in as: ', loggedInAs);
-  console.log('Topic list: ', topics);
-
   return (
     <div className="home">
       <div className="topics">
@@ -69,10 +78,12 @@ const Topics = () => {
               }
               handleTopicEdit(updatedTopic);
             }}
-            onTopicDeletion={() => handleTopicDeletion(topic)}
+            onTopicDelete={() => handleTopicDelete(topic)}
           />)}
       </div>
-      <NewTopicForm />
+      <NewTopicForm onTopicAdd={(newTopic: Topic) => {
+        handleTopicAdd(newTopic);
+      }}/>
     </div>
   );
 };

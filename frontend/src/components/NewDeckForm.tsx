@@ -1,9 +1,9 @@
-import { FormEvent, FormEventHandler, useState } from 'react';
+import React, { FormEvent, FormEventHandler, useState } from 'react';
 import axios from 'axios';
 import { useAuthContext } from '../hooks/useAuthContext';
-import { Topic } from '../../../backend/models/topicModel';
+import { Deck } from '../../../backend/models/deckModel';
 
-const NewTopic = ({ onTopicAdd }: { onTopicAdd: Function }) => {
+const NewDeck = ({ onDeckAdd }: { onDeckAdd: Function }) => {
   const { loggedInAs } = useAuthContext();
 
   const [name, setName] = useState('');
@@ -17,10 +17,9 @@ const NewTopic = ({ onTopicAdd }: { onTopicAdd: Function }) => {
       return;
     }
 
-    const newTopic = { topicName: name } as Topic;
-
+    const newDeck = { deckName: name } as Deck;
     try {
-      await onTopicAdd(newTopic);
+      onDeckAdd(newDeck);
       setName('');
       setError(null);
     } catch (err) {
@@ -32,7 +31,7 @@ const NewTopic = ({ onTopicAdd }: { onTopicAdd: Function }) => {
 
   return (
     <form className="create" onSubmit={handleSubmit}>
-      <h3>Add a New Topic</h3>
+      <h3>Add a New Deck</h3>
       <label>Name:</label>
       <input
         type='text'
@@ -48,4 +47,4 @@ const NewTopic = ({ onTopicAdd }: { onTopicAdd: Function }) => {
   );
 };
 
-export default NewTopic;
+export default NewDeck;

@@ -1,29 +1,53 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
-import { type Topic } from '../../../backend/models/topicModel';
-import TopicListHttpRequest from '../httpRequests/topics';
-import TopicDetails from '../components/TopicDetails';
-import NewTopicForm from '../components/NewTopicForm';
+import { type Deck } from '../../../backend/models/deckModel';
+import DeckListHttpRequest from '../httpRequests/decks';
+import DeckDetails from '../components/DeckDetails';
+import NewDeckForm from '../components/NewDeckForm';
 import { useParams } from 'react-router-dom';
 
 const Decks = () => {
   const { loggedInAs } = useAuthContext();
-  const [decks, setDecks] = useState([] as Topic[]);
+  const [decks, setDecks] = useState([] as Deck[]);
   const { topicId } = useParams();
 
-  const updateDecks = async () => {
+  const updateDecks = useCallback(async () => {
+    if (!topicId) {
+      return;
+    }
+
     try {
-      const response = await TopicListHttpRequest.getAll();
-      console.log('Topic component received response: ', response);
+      const response = await DeckListHttpRequest.getAll(topicId);
       setDecks(response.data);
     } catch (e) {
       e instanceof Error && console.log(e);
     };
-  };
+  }, [topicId]);
 
-  const handleTopicDeletion = async (topic: Topic) => {
+  const handleDeckAdd = async (deck: Deck) => {
+    if (!topicId) {
+      return;
+    }
+
     try {
-      const response = await TopicListHttpRequest.deleteTopic(topic);
+      const response = await DeckListHttpRequest.createDeck(topicId, deck);
+      if (response.status === 200) {
+        await updateDecks();
+      } else {
+        throw new Error();
+      }
+    } catch (err) {
+      console.log('Add failed');
+    }
+  };
+  
+  const handleDeckDelete = async (deck: Deck) => {
+    if (!topicId) {
+      return;
+    }
+
+    try {
+      const response = await DeckListHttpRequest.deleteDeck(topicId, deck);
       if (response.status === 200) {
         await updateDecks();
       } else {
@@ -34,28 +58,50 @@ const Decks = () => {
     }
   }
 
+  const handleDeckEdit = async (updatedDeck: Deck) => {
+    if (!topicId) {
+      return;
+    }
+
+    try {
+      const response = await DeckListHttpRequest.updateDeck(topicId, updatedDeck);
+      if (response.status === 200) {
+        await updateDecks();
+      } else {
+        throw new Error();
+      }
+    } catch (err) {
+      console.log('Edit failed');
+    }
+  };
+
   useEffect(() => {
     if (loggedInAs) {
       updateDecks();
     } else {
-      setDecks([] as Topic[]);
+      setDecks([] as Deck[]);
     }
-  }, [loggedInAs]);
-
-  console.log('Topic page logged in as: ', loggedInAs);
-  console.log('Topic list: ', decks);
+  }, [loggedInAs, updateDecks]);
 
   return (
     <div className="home">
       <div className="topics">
-        {/* { decks.length > 0 && decks.map((topic) => 
-          <TopicDetails
-            key={topic._id}
-            topic={topic}
-            onTopicDeletion={() => handleTopicDeletion(topic)}
-          />)} */}
+        { decks.length > 0 && decks.map((deck) => 
+          <DeckDetails
+            key={deck._id}
+            deck={deck}
+            onDeckEdit={(updatedDeck: Deck) => {
+              if (updatedDeck._id !== deck._id) {
+                throw new Error('Edit failed.');
+              }
+              handleDeckEdit(updatedDeck);
+            }}
+            onDeckDelete={() => handleDeckDelete(deck)}
+          />)}
       </div>
-      <NewTopicForm />
+      <NewDeckForm onDeckAdd={(newDeck: Deck) => {
+        handleDeckAdd(newDeck);
+      }}/>
     </div>
   );
 };
