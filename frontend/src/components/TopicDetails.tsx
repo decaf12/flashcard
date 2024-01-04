@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 
 const TopicDetails = ({ topic, onTopicEdit, onTopicDelete: onTopicDeletion }: 
   { topic: Topic, onTopicEdit: Function, onTopicDelete: MouseEventHandler<HTMLFormElement> }) => {
-  console.log('TopicDetails component received topic: ', topic);
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(topic.topicName);
   const [draftName, setDraftName] = useState(topic.topicName);
@@ -19,7 +18,7 @@ const TopicDetails = ({ topic, onTopicEdit, onTopicDelete: onTopicDeletion }:
   return (
     <div className="topic-details">
       { !isEditing
-        ? <Link to={`/${topic._id}/decks`}>
+        ? <Link to={`/topics/${topic._id}/decks`}>
             <h4>{name}</h4>
           </Link>
         : <h4>{name}</h4> }

@@ -41,7 +41,7 @@ const NewDeck = ({ onDeckAdd }: { onDeckAdd: Function }) => {
         value={name}
         className={error?.emptyFields?.includes('title') ? 'error' : ''}
       />
-      <button>Add Workout</button>
+      <button>Add Deck</button>
       {error?.error && <div className='error'>{error.error}</div>}
     </form>
   );
