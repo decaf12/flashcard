@@ -13,7 +13,7 @@ class TopicListHttpRequest {
   }
 
   updateTopic(data: Topic) {
-    return flashcardHttpRequestBase().patch(`/topics/${data._id}`);
+    return flashcardHttpRequestBase().patch(`/topics/${data._id}`, data);
   }
 
   deleteTopic(data: Topic) {

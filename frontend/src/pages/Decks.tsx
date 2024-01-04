@@ -1,19 +1,21 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { type Topic } from '../../../backend/models/topicModel';
 import TopicListHttpRequest from '../httpRequests/topics';
 import TopicDetails from '../components/TopicDetails';
 import NewTopicForm from '../components/NewTopicForm';
+import { useParams } from 'react-router-dom';
 
-const Topics = () => {
+const Decks = () => {
   const { loggedInAs } = useAuthContext();
-  const [topics, setTopics] = useState([] as Topic[]);
+  const [decks, setDecks] = useState([] as Topic[]);
+  const { topicId } = useParams();
 
-  const updateTopics = async () => {
+  const updateDecks = async () => {
     try {
       const response = await TopicListHttpRequest.getAll();
       console.log('Topic component received response: ', response);
-      setTopics(response.data);
+      setDecks(response.data);
     } catch (e) {
       e instanceof Error && console.log(e);
     };
@@ -23,58 +25,39 @@ const Topics = () => {
     try {
       const response = await TopicListHttpRequest.deleteTopic(topic);
       if (response.status === 200) {
-        await updateTopics();
+        await updateDecks();
       } else {
         throw new Error();
       }
     } catch (err) {
       console.log('Deletion failed');
     }
-  };
-
-  const handleTopicEdit = async (updatedTopic: Topic) => {
-    try {
-      const response = await TopicListHttpRequest.updateTopic(updatedTopic);
-      if (response.status === 200) {
-        await updateTopics();
-      } else {
-        throw new Error();
-      }
-    } catch (err) {
-      console.log('Edit failed');
-    }
-  };
+  }
 
   useEffect(() => {
     if (loggedInAs) {
-      updateTopics();
+      updateDecks();
     } else {
-      setTopics([] as Topic[]);
+      setDecks([] as Topic[]);
     }
   }, [loggedInAs]);
 
   console.log('Topic page logged in as: ', loggedInAs);
-  console.log('Topic list: ', topics);
+  console.log('Topic list: ', decks);
 
   return (
     <div className="home">
       <div className="topics">
-        { topics.length > 0 && topics.map((topic) => 
+        {/* { decks.length > 0 && decks.map((topic) => 
           <TopicDetails
             key={topic._id}
             topic={topic}
-            onTopicEdit={(updatedTopic: Topic) => {
-              if (updatedTopic._id !== topic._id) {
-                throw new Error('Edit failed.');
-              }
-              handleTopicEdit(updatedTopic);
-            }}
             onTopicDeletion={() => handleTopicDeletion(topic)}
-          />)}
+          />)} */}
       </div>
       <NewTopicForm />
     </div>
   );
 };
 
-export default Topics;
+export default Decks;

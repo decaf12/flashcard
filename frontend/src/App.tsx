@@ -25,6 +25,10 @@ function App() {
               path='/signup'
               element={!loggedInAs ? <Signup /> : <Navigate to='/' />}
             />
+            {/* <Route
+              path='/topics/:topicId/decks'
+              element={!loggedInAs ? <Decks /> : <Navigate to='login' />}
+            /> */}
           </Routes>
         </div>
       </BrowserRouter>
