@@ -7,30 +7,35 @@ const TopicDetails = ({ topic, onTopicEdit, onTopicDeletion }:
   console.log('TopicDetails component received topic: ', topic);
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(topic.topicName);
+  const [draftName, setDraftName] = useState(topic.topicName);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await onTopicEdit({ ...topic, topicName: name });
+    await onTopicEdit({ ...topic, topicName: draftName });
+    setName(draftName);
     setIsEditing(false);
   };
 
   return (
     <div className="topic-details">
-      <Link to={`/${topic._id}/decks`}>
-        <h4>{name}</h4>
-      </Link>
+      { isEditing
+        ? <Link to={`/${topic._id}/decks`}>
+            <h4>{name}</h4>
+          </Link>
+        : <h4>{name}</h4> }
 
       { isEditing
         ? <form className="create" onSubmit={handleSubmit}>
             <input
               type='text'
               placeholder='New name'
-              onChange={(e) => setName(e.target.value)}
-              value={name}
+              onChange={(e) => setDraftName(e.target.value)}
+              value={draftName}
             />
             <button>Save</button>
             <button onClick={(e) => {
               e.preventDefault();
+              setDraftName(name);
               setIsEditing(false);
             }}>
               Cancel
