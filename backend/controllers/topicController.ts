@@ -20,6 +20,7 @@ export const createTopic: RequestHandler = (async (req: Request, res: Response):
   if (!isFilled(topicName)) {
     res.status(400).json({
       error: 'Please provide a title name.',
+      missingFields: ['name'],
     });
     return;
   };

@@ -6,7 +6,6 @@ import Signup from './pages/Signup';
 
 function App() {
   const { loggedInAs } = useAuthContext();
-  console.log('User: ', loggedInAs);
 
   return (
     <div className="App">

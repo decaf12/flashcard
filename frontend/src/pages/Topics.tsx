@@ -1,41 +1,44 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
-import { useTopicListContext } from '../hooks/useTopicListContext';
 import { type Topic } from '../../../backend/models/topicModel';
 import TopicListHttpRequest from '../httpRequests/topics';
-import { TopicListActionType } from '../context/TopicListContext';
 import TopicDetails from '../components/TopicDetails';
 import NewTopicForm from '../components/NewTopicForm';
 
 const Topics = () => {
   const { loggedInAs } = useAuthContext();
-  const { topics, dispatch: dispatchTopicList } = useTopicListContext();
+  const [topics, setTopics] = useState([] as Topic[]);
 
-  const handleTopicDeletion = (topic: Topic) => {
-    dispatchTopicList({
-      type: TopicListActionType.DELETE_TOPIC,
-      payload: [topic],
-    });
+  const updateTopics = async () => {
+    try {
+      const response = await TopicListHttpRequest.getAll();
+      console.log('Topic component received response: ', response);
+      setTopics(response.data);
+    } catch (e) {
+      e instanceof Error && console.log(e);
+    };
+  };
+
+  const handleTopicDeletion = async (topic: Topic) => {
+    try {
+      const response = await TopicListHttpRequest.deleteTopic(topic);
+      if (response.status === 200) {
+        await updateTopics();
+      } else {
+        throw new Error();
+      }
+    } catch (err) {
+      console.log('Deletion failed');
+    }
   }
 
   useEffect(() => {
-    const fetchTopics = async () => {
-      try {
-        const response = await TopicListHttpRequest.getAll();
-        console.log('Topic component received response: ', response);
-        dispatchTopicList({
-          type: TopicListActionType.SET_TOPICS,
-          payload: response.data,
-        });
-      } catch (e) {
-        e instanceof Error && console.log(e);
-      };
-    };
-
     if (loggedInAs) {
-      fetchTopics();
+      updateTopics();
+    } else {
+      setTopics([] as Topic[]);
     }
-  }, [loggedInAs, dispatchTopicList]);
+  }, [loggedInAs]);
 
   console.log('Topic page logged in as: ', loggedInAs);
   console.log('Topic list: ', topics);
@@ -44,7 +47,11 @@ const Topics = () => {
     <div className="home">
       <div className="topics">
         { topics.length > 0 && topics.map((topic) => 
-          <TopicDetails key={topic._id} topic={topic} onTopicDeletion={() => handleTopicDeletion(topic)} />)}
+          <TopicDetails
+            key={topic._id}
+            topic={topic}
+            onTopicDeletion={() => handleTopicDeletion(topic)}
+          />)}
       </div>
       <NewTopicForm />
     </div>
