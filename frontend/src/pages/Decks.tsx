@@ -10,7 +10,6 @@ const Decks = () => {
   const { loggedInAs } = useAuthContext();
   const [decks, setDecks] = useState([] as Deck[]);
   const { topicId } = useParams();
-  console.log('Decks: ', decks);
 
   const updateDecks = useCallback(async () => {
     if (!topicId) {
@@ -19,7 +18,6 @@ const Decks = () => {
 
     try {
       const response = await DeckListHttpRequest.getAll(topicId);
-      console.log('Decks received: ', response.data);
       setDecks(response.data);
     } catch (e) {
       e instanceof Error && console.log(e);

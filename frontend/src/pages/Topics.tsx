@@ -7,7 +7,7 @@ import NewTopicForm from '../components/NewTopicForm';
 
 const Topics = () => {
   const { loggedInAs } = useAuthContext();
-  const [topics, setTopics] = useState([] as Topic[]);
+  const [topics, setTopics] = useState(null as Topic[] | null);
 
   const updateTopics = async () => {
     try {
@@ -68,18 +68,22 @@ const Topics = () => {
   return (
     <div className="home">
       <div className="topics">
-        { topics.length > 0 && topics.map((topic) => 
-          <TopicDetails
-            key={topic._id}
-            topic={topic}
-            onTopicEdit={(updatedTopic: Topic) => {
-              if (updatedTopic._id !== topic._id) {
-                throw new Error('Edit failed.');
-              }
-              handleTopicEdit(updatedTopic);
-            }}
-            onTopicDelete={() => handleTopicDelete(topic)}
-          />)}
+        { topics === null
+            ? 'Loading'
+            : topics.length > 0
+              ? topics.map((topic) => 
+                <TopicDetails
+                  key={topic._id}
+                  topic={topic}
+                  onTopicEdit={(updatedTopic: Topic) => {
+                    if (updatedTopic._id !== topic._id) {
+                      throw new Error('Edit failed.');
+                    }
+                    handleTopicEdit(updatedTopic);
+                  }}
+                  onTopicDelete={() => handleTopicDelete(topic)}
+                />)
+              : 'You have no topics. Add a few!'}
       </div>
       <NewTopicForm onTopicAdd={(newTopic: Topic) => {
         handleTopicAdd(newTopic);

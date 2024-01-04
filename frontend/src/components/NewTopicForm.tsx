@@ -12,11 +12,15 @@ const NewTopic = ({ onTopicAdd }: { onTopicAdd: Function }) => {
   const handleSubmit = (async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     if (loggedInAs === null) {
-      const notLoggedIn = { error: 'You must be logged in.' };
-      setError(notLoggedIn);
+      setError({ error: 'You must be logged in.' });
       return;
     }
 
+    if (name === '') {
+      setError({ error: 'Provde a name.' });
+      return;
+    }
+  
     const newTopic = { topicName: name } as Topic;
 
     try {
