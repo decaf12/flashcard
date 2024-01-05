@@ -87,7 +87,7 @@ const Cards = () => {
   return (
     <div className="home">
       <div>
-        <Link to={`/topics/${topicId}/decks/${deckId}`}>
+        <Link to={`/topics/${topicId}/decks`}>
           Back to decks
         </Link>
       </div>

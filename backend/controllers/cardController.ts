@@ -20,7 +20,6 @@ export const getAllCards: RequestHandler = (async (req: Request, res: Response):
     }
 
     const cards = await cardCollection.find({ deckId });
-    console.log('Cards: ', cards);
     res.status(200).json(cards);
   } catch (err) {
     if (err instanceof Error) {
