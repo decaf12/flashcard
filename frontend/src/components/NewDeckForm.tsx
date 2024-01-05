@@ -1,4 +1,4 @@
-import React, { FormEvent, FormEventHandler, useState } from 'react';
+import { FormEvent, FormEventHandler, useState } from 'react';
 import axios from 'axios';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { Deck } from '../../../backend/models/deckModel';
@@ -36,7 +36,7 @@ const NewDeck = ({ onDeckAdd }: { onDeckAdd: Function }) => {
   }) as FormEventHandler<HTMLFormElement>;
 
   return (
-    <form className="create" onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}>
       <h3>Add a New Deck</h3>
       <label>Name:</label>
       <input

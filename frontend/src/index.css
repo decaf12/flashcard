@@ -12,7 +12,8 @@ body {
   font-family: "Poppins";
 }
 header {
-  background: #fff;
+  background: black;
+  color: white;
 }
 header .container {
   max-width: 1400px;
@@ -23,7 +24,7 @@ header .container {
   justify-content: space-between;
 }
 header a {
-  color: #333;
+  color: white;
   text-decoration: none;
 }
 .pages{

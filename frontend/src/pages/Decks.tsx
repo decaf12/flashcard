@@ -90,11 +90,6 @@ const Decks = () => {
 
   return (
     <div className="home">
-      <div>
-        <Link to='/'>
-          Back to topics
-        </Link>
-      </div>
       <div className="topics">
         { decks === null
           ? 'Loading'
@@ -113,7 +108,12 @@ const Decks = () => {
                 />)
             : 'You have no decks. Add a few!'}
       </div>
-      <NewDeckForm onDeckAdd={handleDeckAdd}/>
+      <div className='create'>
+        <Link to='/'>
+          Back to topics
+        </Link>
+        <NewDeckForm onDeckAdd={handleDeckAdd}/>
+      </div>
     </div>
   );
 };
