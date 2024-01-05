@@ -1,7 +1,8 @@
-import { MouseEventHandler, useState, FormEvent } from 'react';
+import React, { MouseEventHandler, useState, FormEvent } from 'react';
 import { type Card } from '../../../backend/models/cardModel';
-import DeleteButton from './DeleteButton';
-import EditButton from './EditButton';
+import DeleteButton from './buttons/DeleteButton';
+import EditButton from './buttons/EditButton';
+import FlipButton from './buttons/FlipButton';
 
 const CardDetails = ({ card, onCardEdit, onCardDelete }: 
   { card: Card, onCardEdit: Function, onCardDelete: MouseEventHandler<HTMLFormElement> }) => {
@@ -28,7 +29,9 @@ const CardDetails = ({ card, onCardEdit, onCardDelete }:
 
   return (
     <div className="item-details">
-      <h4>{showQuestion ? card.question : card.answer}</h4>
+      { showQuestion 
+        ? <h4><span>Question: </span>{card.question}</h4>
+        : <h4><span>Answer: </span>{card.answer}</h4> }
       { isEditing
         ? <form className="create" onSubmit={handleSubmit}>
             <input
@@ -53,11 +56,9 @@ const CardDetails = ({ card, onCardEdit, onCardDelete }:
             </button>
           </form>
         : <EditButton onClick={() => setIsEditing(true)} /> }
+      { !isEditing && <FlipButton onClick={() => setShowQuestion(!showQuestion)} /> }
       <DeleteButton onClick={onCardDelete} />
       { error?.error && <div className='error'>{error.error}</div> }
-      <div>
-        <span className='material-symbols-outlined' onClick={() => setShowQuestion(!showQuestion)}>Flip</span>
-      </div>
     </div>
   );
 };

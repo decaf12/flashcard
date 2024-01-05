@@ -1,7 +1,7 @@
 import { MouseEventHandler, useState, FormEvent } from 'react';
 import { type Topic } from '../../../backend/models/topicModel';
-import DeleteButton from './DeleteButton';
-import EditButton from './EditButton';
+import DeleteButton from './buttons/DeleteButton';
+import EditButton from './buttons/EditButton';
 import { Link } from 'react-router-dom';
 
 const TopicDetails = ({ topic, onTopicEdit, onTopicDelete }: 

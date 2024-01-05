@@ -1,8 +1,8 @@
 import { MouseEventHandler, useState, FormEvent } from 'react';
 import { type Deck } from '../../../backend/models/deckModel';
 import { Link, useParams } from 'react-router-dom';
-import DeleteButton from './DeleteButton';
-import EditButton from './EditButton';
+import DeleteButton from './buttons/DeleteButton';
+import EditButton from './buttons/EditButton';
 
 const DeckDetails = ({ deck, onDeckEdit, onDeckDelete }: 
   { deck: Deck, onDeckEdit: Function, onDeckDelete: MouseEventHandler<HTMLFormElement> }) => {
