@@ -16,11 +16,11 @@ const Navbar = () => {
           { loggedInAs && (
             <div>
               <span>{loggedInAs}</span>
-              <button onClick={logout}>Log out</button>
+              <span className='login-group' onClick={logout}>Log out</span>
             </div>)}
 
           { !loggedInAs && (
-            <div>
+            <div className='login-group'>
               <Link to='/login'>Log in</Link>
               <Link to='/signup'>Sign up</Link>
             </div>)}
