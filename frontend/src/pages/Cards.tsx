@@ -58,13 +58,31 @@ const Cards = () => {
         return { error: 'Add failed. '};
       }
     } catch (err) {
-      console.log('Error from server.', err);
       if (axios.isAxiosError(err) && err.response?.data) {
         return err.response.data;
       }
     }
   };
-  
+
+  const handleCardEdit = async (updatedCard: Card) => {
+    if (!topicId || !deckId) {
+      return;
+    }
+
+    try {
+      const response = await CardListHttpRequest.updateCard(topicId, deckId, updatedCard);
+      if (response.status === 200) {
+        await updateCards();
+      } else {
+        return { error: 'Edit failed. '};
+      }
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response?.data) {
+        return err.response.data;
+      }
+    }
+  };
+
   const handleCardDelete = async (card: Card) => {
     if (!topicId || !deckId) {
       return;
@@ -81,23 +99,6 @@ const Cards = () => {
       console.log('Deletion failed');
     }
   }
-
-  const handleCardEdit = async (updatedCard: Card) => {
-    if (!topicId || !deckId) {
-      return;
-    }
-
-    try {
-      const response = await CardListHttpRequest.updateCard(topicId, deckId, updatedCard);
-      if (response.status === 200) {
-        await updateCards();
-      } else {
-        throw new Error();
-      }
-    } catch (err) {
-      console.log('Edit failed');
-    }
-  };
 
   useEffect(() => {
     if (loggedInAs) {
@@ -123,16 +124,16 @@ const Cards = () => {
                   { card && <CardDetails
                       key={card._id}
                       card={card}
-                      onCardEdit={(updatedCard: Card) => {
+                      onCardEdit={async (updatedCard: Card) => {
                         if (updatedCard._id !== card._id) {
                           throw new Error('Edit failed.');
                         }
-                        handleCardEdit(updatedCard);
+                        return await handleCardEdit(updatedCard);
                       }}
                       onCardDelete={() => handleCardDelete(card)}
                     /> }
                     { cards.length > 1 && <span onClick={goToNextCard}>Next</span> }
-                </> 
+                </>
               : 'You have no cards. Add a few!'}
       </div>
       <NewCardForm onCardAdd={handleCardAdd}/>

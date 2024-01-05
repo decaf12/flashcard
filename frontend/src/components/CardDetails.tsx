@@ -7,15 +7,20 @@ const CardDetails = ({ card, onCardEdit, onCardDelete }:
   const [showQuestion, setShowQuestion] = useState(true);
   const [draftQuestion, setDraftQuestion] = useState('');
   const [draftAnswer, setDraftAnswer] = useState('');
+  const [error, setError] = useState(null as any);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const newCard = showQuestion ? { ...card, question: draftQuestion } : { ...card, answer: draftQuestion };
-    await onCardEdit(newCard);
-    if (showQuestion) {
-      setDraftQuestion('');
-    } else {
-      setDraftAnswer('');
+    const status = await onCardEdit(newCard);
+    console.log('Status: ', status);
+    setError(status);
+    if (!status) {
+      if (showQuestion) {
+        setDraftQuestion('');
+      } else {
+        setDraftAnswer('');
+      }
     }
     setIsEditing(false);
   };
@@ -48,6 +53,7 @@ const CardDetails = ({ card, onCardEdit, onCardDelete }:
         : <span className='material-symbols-outlined' onClick={() => setIsEditing(true)}>edit</span> }
 
       <span className='material-symbols-outlined' onClick={onCardDelete}>delete</span>
+      {error?.error && <div className='error'>{error.error}</div>}
       <div>
         <span className='material-symbols-outlined' onClick={() => setShowQuestion(!showQuestion)}>Flip</span>
       </div>

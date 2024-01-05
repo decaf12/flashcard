@@ -100,8 +100,9 @@ export const updateCard: RequestHandler = (async (req: Request, res: Response): 
       res.status(404).json({ error: 'No such card.' });
     }
   } catch (err) {
-    if (err instanceof Error) {
-      res.status(400).json({ error: err.message });
+    if (err instanceof Error && 'code' in err) {
+      const message = err.code === 11000 ? 'A card with the same question already exists in this deck.' : err.message;
+      res.status(400).json({ error: message });
     }
   }
 }) as RequestHandler;
