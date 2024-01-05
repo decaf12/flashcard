@@ -4,21 +4,20 @@ import { type Card } from '../../../backend/models/cardModel';
 const CardDetails = ({ card, onCardEdit, onCardDelete }: 
   { card: Card, onCardEdit: Function, onCardDelete: MouseEventHandler<HTMLFormElement> }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [showQuestion, setShowQuestion] = useState(false);
-  const [text, setText] = useState(showQuestion ? card.question : card.answer);
+  const [showQuestion, setShowQuestion] = useState(true);
   const [draftText, setDraftText] = useState('');
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const newCard = showQuestion ? { ...card, question: draftText } : { ...card, answer: draftText };
     await onCardEdit(newCard);
-    setText(draftText);
+    setDraftText('');
     setIsEditing(false);
   };
 
   return (
     <div className="topic-details">
-      <h4>{text}</h4>
+      <h4>{showQuestion ? card.question : card.answer}</h4>
       { isEditing
         ? <form className="create" onSubmit={handleSubmit}>
             <input
@@ -30,7 +29,6 @@ const CardDetails = ({ card, onCardEdit, onCardDelete }:
             <button>Save</button>
             <button onClick={(e) => {
               e.preventDefault();
-              setDraftText(text);
               setIsEditing(false);
             }}>
               Cancel

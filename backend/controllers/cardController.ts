@@ -51,6 +51,7 @@ export const createCard: RequestHandler = (async (req: Request, res: Response): 
     const newCard = await cardCollection.create({ deckId, question, answer });
     res.status(200).json(newCard);
   } catch (err) {
+    console.log('createCard error: ', err);
     if (err instanceof Error) {
       res.status(400).json({ error: err.message });
     }
