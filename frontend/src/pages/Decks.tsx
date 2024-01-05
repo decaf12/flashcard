@@ -108,9 +108,7 @@ const Decks = () => {
                 />)
             : 'You have no decks. Add a few!'}
       </div>
-      <NewDeckForm onDeckAdd={(newDeck: Deck) => {
-        handleDeckAdd(newDeck);
-      }}/>
+      <NewDeckForm onDeckAdd={handleDeckAdd}/>
     </div>
   );
 };

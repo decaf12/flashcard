@@ -1,6 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { Card } from '../../../backend/models/cardModel';
+import axios from 'axios';
 import CardListHttpRequest from '../httpRequests/cards';
 import CardDetails from '../components/CardDetails';
 import NewCardForm from '../components/NewCardForm';
@@ -54,10 +55,15 @@ const Cards = () => {
       if (response.status === 200) {
         await updateCards();
       } else {
-        throw new Error();
+        console.log('Response status not 200: ', response);
+        return { error: 'Add failed. '};
       }
     } catch (err) {
-      console.log('Add failed');
+      console.log('Error from server.', err);
+      if (axios.isAxiosError(err) && err.response?.data) {
+        console.log('Axios error from server.', err.response.data);
+        return err.response.data;
+      }
     }
   };
   
@@ -131,9 +137,7 @@ const Cards = () => {
                 </> 
               : 'You have no cards. Add a few!'}
       </div>
-      <NewCardForm onCardAdd={(newCard: Card) => {
-        handleCardAdd(newCard);
-      }}/>
+      <NewCardForm onCardAdd={handleCardAdd}/>
     </div>
   );
 };

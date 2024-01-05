@@ -85,9 +85,7 @@ const Topics = () => {
                 />)
               : 'You have no topics. Add a few!'}
       </div>
-      <NewTopicForm onTopicAdd={(newTopic: Topic) => {
-        handleTopicAdd(newTopic);
-      }}/>
+      <NewTopicForm onTopicAdd={handleTopicAdd}/>
     </div>
   );
 };

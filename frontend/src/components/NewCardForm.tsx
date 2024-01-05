@@ -10,8 +10,6 @@ const NewCard = ({ onCardAdd }: { onCardAdd: Function }) => {
   const [answer, setAnswer] = useState('');
   const [error, setError] = useState(null as any);
 
-  console.log('NewCardForm called.');
-
   const handleSubmit = (async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     if (loggedInAs === null) {
@@ -31,11 +29,15 @@ const NewCard = ({ onCardAdd }: { onCardAdd: Function }) => {
 
     const newCard = { question, answer } as Card;
     try {
-      onCardAdd(newCard);
-      setQuestion('');
-      setAnswer('');
-      setError(null);
+      const status = await onCardAdd(newCard);
+      console.log('NewCardForm status: ', status);
+      setError(status);
+      if (!status) {
+        setQuestion('');
+        setAnswer('');
+      }
     } catch (err) {
+      console.log('NewCardForm error: ', err);
       if (axios.isAxiosError(err) && err.response?.data) {
         setError(err.response.data);
       }
