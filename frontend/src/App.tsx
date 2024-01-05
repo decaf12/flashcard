@@ -1,17 +1,17 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthContext } from './hooks/useAuthContext';
 import Topics from './pages/Topics';
 import Decks from './pages/Decks';
+import Cards from './pages/Cards';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 
 function App() {
   const { loggedInAs } = useAuthContext();
   console.log(`Logged in as ${loggedInAs}.`);
-
+  
   return (
     <div className="App">
-      <BrowserRouter>
         {/* <Navbar /> */}
         <div className="pages">
           <Routes>
@@ -31,9 +31,12 @@ function App() {
               path='/topics/:topicId/decks'
               element={loggedInAs ? <Decks /> : <Navigate to='/login' />}
             />
+            <Route
+              path='/topics/:topicId/decks/:deckId/cards'
+              element={loggedInAs ? <Cards /> : <Navigate to='/login' />}
+            />
           </Routes>
         </div>
-      </BrowserRouter>
     </div>
   );
 }

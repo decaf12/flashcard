@@ -1,12 +1,13 @@
 import React, { MouseEventHandler, useState, FormEvent } from 'react';
 import { type Deck } from '../../../backend/models/deckModel';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
-const DeckDetails = ({ deck, onDeckEdit, onDeckDelete: onDeckDeletion }: 
+const DeckDetails = ({ deck, onDeckEdit, onDeckDelete }: 
   { deck: Deck, onDeckEdit: Function, onDeckDelete: MouseEventHandler<HTMLFormElement> }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(deck.deckName);
   const [draftName, setDraftName] = useState(deck.deckName);
+  const { topicId } = useParams();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -17,8 +18,8 @@ const DeckDetails = ({ deck, onDeckEdit, onDeckDelete: onDeckDeletion }:
 
   return (
     <div className="topic-details">
-      { isEditing
-        ? <Link to={`/${deck._id}/decks`}>
+      { !isEditing
+        ? <Link to={`/topics/${topicId}/decks/${deck._id}/cards`}>
             <h4>{name}</h4>
           </Link>
         : <h4>{name}</h4> }
@@ -42,7 +43,7 @@ const DeckDetails = ({ deck, onDeckEdit, onDeckDelete: onDeckDeletion }:
           </form>
         : <span className='material-symbols-outlined' onClick={() => setIsEditing(true)}>edit</span> }
 
-      <span className='material-symbols-outlined' onClick={onDeckDeletion}>delete</span>
+      <span className='material-symbols-outlined' onClick={onDeckDelete}>delete</span>
     </div>
   );
 };

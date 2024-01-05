@@ -1,14 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { type Deck } from '../../../backend/models/deckModel';
 import DeckListHttpRequest from '../httpRequests/decks';
 import DeckDetails from '../components/DeckDetails';
 import NewDeckForm from '../components/NewDeckForm';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 const Decks = () => {
   const { loggedInAs } = useAuthContext();
-  const [decks, setDecks] = useState([] as Deck[]);
+  const [decks, setDecks] = useState(null as Deck[] | null);
   const { topicId } = useParams();
 
   const updateDecks = useCallback(async () => {
@@ -85,19 +85,28 @@ const Decks = () => {
 
   return (
     <div className="home">
+      <div>
+        <Link to='/'>
+          Back to topics
+        </Link>
+      </div>
       <div className="topics">
-        { decks.length > 0 && decks.map((deck) => 
-          <DeckDetails
-            key={deck._id}
-            deck={deck}
-            onDeckEdit={(updatedDeck: Deck) => {
-              if (updatedDeck._id !== deck._id) {
-                throw new Error('Edit failed.');
-              }
-              handleDeckEdit(updatedDeck);
-            }}
-            onDeckDelete={() => handleDeckDelete(deck)}
-          />)}
+        { decks === null
+          ? 'Loading'
+          : decks.length > 0
+            ? decks.map((deck) => 
+                <DeckDetails
+                  key={deck._id}
+                  deck={deck}
+                  onDeckEdit={(updatedDeck: Deck) => {
+                    if (updatedDeck._id !== deck._id) {
+                      throw new Error('Edit failed.');
+                    }
+                    handleDeckEdit(updatedDeck);
+                  }}
+                  onDeckDelete={() => handleDeckDelete(deck)}
+                />)
+            : 'You have no decks. Add a few!'}
       </div>
       <NewDeckForm onDeckAdd={(newDeck: Deck) => {
         handleDeckAdd(newDeck);

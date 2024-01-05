@@ -18,7 +18,7 @@ const TopicDetails = ({ topic, onTopicEdit, onTopicDelete: onTopicDeletion }:
   return (
     <div className="topic-details">
       { !isEditing
-        ? <Link to={`/topics/${topic._id}/decks`}>
+        ? <Link to={`/topics/${topic._id}/decks`} state={ topic }>
             <h4>{name}</h4>
           </Link>
         : <h4>{name}</h4> }
