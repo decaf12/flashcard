@@ -43,7 +43,7 @@ const NewCard = ({ onCardAdd }: { onCardAdd: Function }) => {
   }) as FormEventHandler<HTMLFormElement>;
 
   return (
-    <form className="create" onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}>
       <h3>Add a New Card</h3>
       <label>Question:</label>
       <input

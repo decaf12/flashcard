@@ -37,7 +37,7 @@ const NewTopic = ({ onTopicAdd }: { onTopicAdd: Function }) => {
   }) as FormEventHandler<HTMLFormElement>;
 
   return (
-    <form className="create" onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}>
       <h3>Add a New Topic</h3>
       <label>Name:</label>
       <input

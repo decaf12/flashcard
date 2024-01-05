@@ -110,11 +110,6 @@ const Cards = () => {
 
   return (
     <div className="home">
-      <div>
-        <Link to={`/topics/${topicId}/decks`}>
-          Back to decks
-        </Link>
-      </div>
       <div className="topics">
         { cards === null
             ? 'Loading'
@@ -136,7 +131,14 @@ const Cards = () => {
                 </>
               : 'You have no cards. Add a few!'}
       </div>
-      <NewCardForm onCardAdd={handleCardAdd}/>
+      <div className='create'>
+        <div>
+          <Link to={`/topics/${topicId}/decks`}>
+            Back to decks
+          </Link>
+        </div>
+        <NewCardForm onCardAdd={handleCardAdd}/>
+      </div>
     </div>
   );
 };

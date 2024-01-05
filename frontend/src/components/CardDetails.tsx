@@ -1,5 +1,7 @@
-import React, { MouseEventHandler, useState, FormEvent } from 'react';
+import { MouseEventHandler, useState, FormEvent } from 'react';
 import { type Card } from '../../../backend/models/cardModel';
+import DeleteButton from './DeleteButton';
+import EditButton from './EditButton';
 
 const CardDetails = ({ card, onCardEdit, onCardDelete }: 
   { card: Card, onCardEdit: Function, onCardDelete: MouseEventHandler<HTMLFormElement> }) => {
@@ -50,9 +52,8 @@ const CardDetails = ({ card, onCardEdit, onCardDelete }:
               Cancel
             </button>
           </form>
-        : <span className='material-symbols-outlined' onClick={() => setIsEditing(true)}>edit</span> }
-
-      <span className='material-symbols-outlined' onClick={onCardDelete}>delete</span>
+        : <EditButton onClick={() => setIsEditing(true)} /> }
+      <DeleteButton onClick={onCardDelete} />
       { error?.error && <div className='error'>{error.error}</div> }
       <div>
         <span className='material-symbols-outlined' onClick={() => setShowQuestion(!showQuestion)}>Flip</span>

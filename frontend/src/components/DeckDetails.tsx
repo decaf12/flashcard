@@ -1,6 +1,8 @@
 import { MouseEventHandler, useState, FormEvent } from 'react';
 import { type Deck } from '../../../backend/models/deckModel';
 import { Link, useParams } from 'react-router-dom';
+import DeleteButton from './DeleteButton';
+import EditButton from './EditButton';
 
 const DeckDetails = ({ deck, onDeckEdit, onDeckDelete }: 
   { deck: Deck, onDeckEdit: Function, onDeckDelete: MouseEventHandler<HTMLFormElement> }) => {
@@ -46,8 +48,8 @@ const DeckDetails = ({ deck, onDeckEdit, onDeckDelete }:
               Cancel
             </button>
           </form>
-        : <span className='material-symbols-outlined' onClick={() => setIsEditing(true)}>edit</span> }
-      <span className='material-symbols-outlined' onClick={onDeckDelete}>delete</span>
+        : <EditButton onClick={() => setIsEditing(true)} /> }
+      <DeleteButton onClick={onDeckDelete} />
       { error?.error && <div className='error'>{error.error}</div> }
     </div>
   );

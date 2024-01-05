@@ -90,7 +90,9 @@ const Topics = () => {
                 />)
               : 'You have no topics. Add a few!'}
       </div>
-      <NewTopicForm onTopicAdd={handleTopicAdd}/>
+      <div className='create'>
+        <NewTopicForm onTopicAdd={handleTopicAdd}/>
+      </div>
     </div>
   );
 };
