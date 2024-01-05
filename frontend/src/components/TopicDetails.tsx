@@ -1,5 +1,7 @@
 import { MouseEventHandler, useState, FormEvent } from 'react';
 import { type Topic } from '../../../backend/models/topicModel';
+import DeleteButton from './DeleteButton';
+import EditButton from './EditButton';
 import { Link } from 'react-router-dom';
 
 const TopicDetails = ({ topic, onTopicEdit, onTopicDelete }: 
@@ -26,7 +28,6 @@ const TopicDetails = ({ topic, onTopicEdit, onTopicDelete }:
             <h4>{name}</h4>
           </Link>
         : <h4>{name}</h4> }
-      <div className="item-details editing">
         { isEditing
           ? <form className="create" onSubmit={handleSubmit}>
               <input
@@ -45,9 +46,8 @@ const TopicDetails = ({ topic, onTopicEdit, onTopicDelete }:
                 Cancel
               </button>
             </form>
-          : <span className='material-symbols-outlined' onClick={() => setIsEditing(true)}>edit</span> }
-        <span className='material-symbols-outlined' onClick={onTopicDelete}>delete</span>
-      </div>
+          : <EditButton onClick={() => setIsEditing(true)} /> }
+        <DeleteButton onClick={onTopicDelete} />
       { error?.error && <div className='error'>{error.error}</div> }
     </div>
   );
