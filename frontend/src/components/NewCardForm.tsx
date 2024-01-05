@@ -24,7 +24,7 @@ const NewCard = ({ onCardAdd }: { onCardAdd: Function }) => {
       return;
     }
 
-    if (question === '') {
+    if (answer === '') {
       setError({ error: 'Provde an answer.' });
       return;
     }
