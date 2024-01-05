@@ -5,13 +5,18 @@ const CardDetails = ({ card, onCardEdit, onCardDelete }:
   { card: Card, onCardEdit: Function, onCardDelete: MouseEventHandler<HTMLFormElement> }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [showQuestion, setShowQuestion] = useState(true);
-  const [draftText, setDraftText] = useState('');
+  const [draftQuestion, setDraftQuestion] = useState('');
+  const [draftAnswer, setDraftAnswer] = useState('');
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const newCard = showQuestion ? { ...card, question: draftText } : { ...card, answer: draftText };
+    const newCard = showQuestion ? { ...card, question: draftQuestion } : { ...card, answer: draftQuestion };
     await onCardEdit(newCard);
-    setDraftText('');
+    if (showQuestion) {
+      setDraftQuestion('');
+    } else {
+      setDraftAnswer('');
+    }
     setIsEditing(false);
   };
 
@@ -23,8 +28,14 @@ const CardDetails = ({ card, onCardEdit, onCardDelete }:
             <input
               type='text'
               placeholder={`New ${showQuestion ? 'question' : 'answer'}`}
-              onChange={(e) => setDraftText(e.target.value)}
-              value={draftText}
+              onChange={(e) => {
+                if (showQuestion) {
+                  setDraftQuestion(e.target.value);
+                } else {
+                  setDraftAnswer(e.target.value);
+                }
+              }}
+              value={showQuestion ? draftQuestion : draftAnswer}
             />
             <button>Save</button>
             <button onClick={(e) => {

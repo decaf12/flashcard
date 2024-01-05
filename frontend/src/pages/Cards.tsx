@@ -9,8 +9,27 @@ import { Link, useParams } from 'react-router-dom';
 const Cards = () => {
   const { loggedInAs } = useAuthContext();
   const [cards, setCards] = useState(null as Card[] | null);
+  const [cardIndex, setCardIndex] = useState(0);
   const { topicId, deckId } = useParams();
-  console.log('Cards: ', cards);
+  const card = cards === null ? null : cards[cardIndex];
+
+  const goToPrevCard = () => {
+    if (cards === null || cards.length === 0) {
+      return;
+    }
+
+    const newIndex = cardIndex === 0 ? cards.length - 1 : cardIndex - 1;
+    setCardIndex(newIndex);
+  };
+
+  const goToNextCard = () => {
+    if (cards === null || cards.length === 0) {
+      return;
+    }
+
+    const newIndex = cardIndex === cards.length - 1 ? 0 : cardIndex + 1;
+    setCardIndex(newIndex);
+  };
 
   const updateCards = useCallback(async () => {
     if (!topicId || !deckId) {
@@ -95,18 +114,21 @@ const Cards = () => {
         { cards === null
             ? 'Loading'
             : cards.length > 0
-              ? cards.map((card) => 
-                  <CardDetails
-                    key={card._id}
-                    card={card}
-                    onCardEdit={(updatedCard: Card) => {
-                      if (updatedCard._id !== card._id) {
-                        throw new Error('Edit failed.');
-                      }
-                      handleCardEdit(updatedCard);
-                    }}
-                    onCardDelete={() => handleCardDelete(card)}
-                  />)
+              ? <>
+                  { cards.length > 1 && <span onClick={goToPrevCard}>Prev</span> }
+                  { card && <CardDetails
+                      key={card._id}
+                      card={card}
+                      onCardEdit={(updatedCard: Card) => {
+                        if (updatedCard._id !== card._id) {
+                          throw new Error('Edit failed.');
+                        }
+                        handleCardEdit(updatedCard);
+                      }}
+                      onCardDelete={() => handleCardDelete(card)}
+                    /> }
+                    { cards.length > 1 && <span onClick={goToNextCard}>Next</span> }
+                </> 
               : 'You have no cards. Add a few!'}
       </div>
       <NewCardForm onCardAdd={(newCard: Card) => {
