@@ -5,9 +5,11 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const { login, error, isLoading }: { login: Function, error: any, isLoading: boolean } = useLogin();
+  const [isEditing, setIsEditing] = useState(true);
 
   const handleSubmit = (async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
+    setIsEditing(false);
     await login(username, password);
   }) as FormEventHandler<HTMLFormElement>;
 
@@ -17,19 +19,25 @@ const Login = () => {
       <label>Username:</label>
       <input
         type='text'
-        onChange={(e) => setUsername(e.target.value)}
+        onChange={(e) => {
+          setIsEditing(true);
+          setUsername(e.target.value);
+        }}
         value={username}
       />
       
       <label>Password:</label>
       <input
         type='password'
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={(e) => {
+          setIsEditing(true);
+          setPassword(e.target.value);
+        }}
         value={password}
       />
 
       <button disabled={isLoading}>Log in</button>
-      { error?.error && <div className='error'>{error.error}</div> }
+      { !isEditing && error?.error && <div className='error'>{error.error}</div> }
     </form>
   );
 };

@@ -5,6 +5,8 @@ import axios from 'axios';
 import CardListHttpRequest from '../httpRequests/cards';
 import CardDetails from '../components/CardDetails';
 import NewCardForm from '../components/NewCardForm';
+import PrevButton from '../components/buttons/PrevButton';
+import NextButton from '../components/buttons/NextButton';
 import { Link, useParams } from 'react-router-dom';
 
 const Cards = () => {
@@ -115,7 +117,10 @@ const Cards = () => {
             ? 'Loading'
             : cards.length > 0
               ? <>
-                  { cards.length > 1 && <span onClick={goToPrevCard}>Prev</span> }
+                  { cards.length > 1 && <>
+                    <PrevButton onClick={goToPrevCard} />
+                    <NextButton onClick={goToNextCard} />
+                    </> }
                   { card && <CardDetails
                       key={card._id}
                       card={card}
@@ -127,7 +132,6 @@ const Cards = () => {
                       }}
                       onCardDelete={() => handleCardDelete(card)}
                     /> }
-                    { cards.length > 1 && <span onClick={goToNextCard}>Next</span> }
                 </>
               : 'You have no cards. Add a few!'}
       </div>
