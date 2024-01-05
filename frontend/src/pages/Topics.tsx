@@ -4,6 +4,7 @@ import { type Topic } from '../../../backend/models/topicModel';
 import TopicListHttpRequest from '../httpRequests/topics';
 import TopicDetails from '../components/TopicDetails';
 import NewTopicForm from '../components/NewTopicForm';
+import axios from 'axios';
 
 const Topics = () => {
   const { loggedInAs } = useAuthContext();

@@ -5,6 +5,7 @@ import DeckListHttpRequest from '../httpRequests/decks';
 import DeckDetails from '../components/DeckDetails';
 import NewDeckForm from '../components/NewDeckForm';
 import { Link, useParams } from 'react-router-dom';
+import axios from 'axios';
 
 const Decks = () => {
   const { loggedInAs } = useAuthContext();
@@ -34,10 +35,12 @@ const Decks = () => {
       if (response.status === 200) {
         await updateDecks();
       } else {
-        throw new Error();
+        return { error: 'Add failed. '};
       }
     } catch (err) {
-      console.log('Add failed');
+      if (axios.isAxiosError(err) && err.response?.data) {
+        return err.response.data;
+      }
     }
   };
   

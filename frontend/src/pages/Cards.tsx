@@ -55,13 +55,11 @@ const Cards = () => {
       if (response.status === 200) {
         await updateCards();
       } else {
-        console.log('Response status not 200: ', response);
         return { error: 'Add failed. '};
       }
     } catch (err) {
       console.log('Error from server.', err);
       if (axios.isAxiosError(err) && err.response?.data) {
-        console.log('Axios error from server.', err.response.data);
         return err.response.data;
       }
     }

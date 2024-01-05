@@ -4,6 +4,7 @@ import deckCollection from '../models/deckModel';
 import topicCollection from '../models/topicModel';
 import isFilled from '../utilities/isFilled';
 import mongoose from 'mongoose';
+import { MongoServerError } from 'mongodb';
 
 export const getAllCards: RequestHandler = (async (req: Request, res: Response): Promise<void> => {
   const { topicId, deckId } = req.params;
@@ -51,9 +52,9 @@ export const createCard: RequestHandler = (async (req: Request, res: Response): 
     const newCard = await cardCollection.create({ deckId, question, answer });
     res.status(200).json(newCard);
   } catch (err) {
-    console.log('createCard error: ', err);
-    if (err instanceof Error) {
-      res.status(400).json({ error: err.message });
+    if (err instanceof Error && 'code' in err) {
+      const message = err.code === 11000 ? 'A card with the same question already exists in this deck.' : err.message;
+      res.status(400).json({ error: message });
     }
   }
 }) as RequestHandler;
