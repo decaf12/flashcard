@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useState, FormEvent } from 'react';
+import { MouseEventHandler, useState, FormEvent } from 'react';
 import { type Deck } from '../../../backend/models/deckModel';
 import { Link, useParams } from 'react-router-dom';
 
@@ -8,12 +8,16 @@ const DeckDetails = ({ deck, onDeckEdit, onDeckDelete }:
   const [name, setName] = useState(deck.deckName);
   const [draftName, setDraftName] = useState(deck.deckName);
   const { topicId } = useParams();
+  const [error, setError] = useState(null as any);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await onDeckEdit({ ...deck, deckName: draftName });
-    setName(draftName);
-    setIsEditing(false);
+    const status = await onDeckEdit({ ...deck, deckName: draftName });
+    setError(status);
+    if (!status) {
+      setName(draftName);
+      setIsEditing(false);
+    }
   };
 
   return (
@@ -42,8 +46,8 @@ const DeckDetails = ({ deck, onDeckEdit, onDeckDelete }:
             </button>
           </form>
         : <span className='material-symbols-outlined' onClick={() => setIsEditing(true)}>edit</span> }
-
       <span className='material-symbols-outlined' onClick={onDeckDelete}>delete</span>
+      { error?.error && <div className='error'>{error.error}</div> }
     </div>
   );
 };

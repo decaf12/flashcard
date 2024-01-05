@@ -13,7 +13,6 @@ const CardDetails = ({ card, onCardEdit, onCardDelete }:
     e.preventDefault();
     const newCard = showQuestion ? { ...card, question: draftQuestion } : { ...card, answer: draftQuestion };
     const status = await onCardEdit(newCard);
-    console.log('Status: ', status);
     setError(status);
     if (!status) {
       if (showQuestion) {
@@ -21,8 +20,8 @@ const CardDetails = ({ card, onCardEdit, onCardDelete }:
       } else {
         setDraftAnswer('');
       }
+      setIsEditing(false);
     }
-    setIsEditing(false);
   };
 
   return (
@@ -53,7 +52,7 @@ const CardDetails = ({ card, onCardEdit, onCardDelete }:
         : <span className='material-symbols-outlined' onClick={() => setIsEditing(true)}>edit</span> }
 
       <span className='material-symbols-outlined' onClick={onCardDelete}>delete</span>
-      {error?.error && <div className='error'>{error.error}</div>}
+      { error?.error && <div className='error'>{error.error}</div> }
       <div>
         <span className='material-symbols-outlined' onClick={() => setShowQuestion(!showQuestion)}>Flip</span>
       </div>

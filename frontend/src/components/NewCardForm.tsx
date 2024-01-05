@@ -30,14 +30,12 @@ const NewCard = ({ onCardAdd }: { onCardAdd: Function }) => {
     const newCard = { question, answer } as Card;
     try {
       const status = await onCardAdd(newCard);
-      console.log('NewCardForm status: ', status);
       setError(status);
       if (!status) {
         setQuestion('');
         setAnswer('');
       }
     } catch (err) {
-      console.log('NewCardForm error: ', err);
       if (axios.isAxiosError(err) && err.response?.data) {
         setError(err.response.data);
       }

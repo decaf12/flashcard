@@ -24,9 +24,11 @@ const NewTopic = ({ onTopicAdd }: { onTopicAdd: Function }) => {
     const newTopic = { topicName: name } as Topic;
 
     try {
-      await onTopicAdd(newTopic);
-      setName('');
-      setError(null);
+      const status = await onTopicAdd(newTopic);
+      setError(status);
+      if (!status) {
+        setName('');
+      }
     } catch (err) {
       if (axios.isAxiosError(err) && err.response?.data) {
         setError(err.response.data);
@@ -46,7 +48,7 @@ const NewTopic = ({ onTopicAdd }: { onTopicAdd: Function }) => {
         value={name}
         className={error?.emptyFields?.includes('title') ? 'error' : ''}
       />
-      <button>Add Workout</button>
+      <button>Add Topic</button>
       {error?.error && <div className='error'>{error.error}</div>}
     </form>
   );

@@ -23,9 +23,11 @@ const NewDeck = ({ onDeckAdd }: { onDeckAdd: Function }) => {
 
     const newDeck = { deckName: name } as Deck;
     try {
-      onDeckAdd(newDeck);
-      setName('');
-      setError(null);
+      const status = await onDeckAdd(newDeck);
+      setError(status);
+      if (!status) {
+        setName('');
+      }
     } catch (err) {
       if (axios.isAxiosError(err) && err.response?.data) {
         setError(err.response.data);

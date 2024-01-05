@@ -25,10 +25,27 @@ const Topics = () => {
       if (response.status === 200) {
         await updateTopics();
       } else {
-        throw new Error();
+        return { error: 'Add failed. '};
       }
     } catch (err) {
-      console.log('Add failed');
+      if (axios.isAxiosError(err) && err.response?.data) {
+        return err.response.data;
+      }
+    }
+  };
+
+  const handleTopicEdit = async (updatedTopic: Topic) => {
+    try {
+      const response = await TopicListHttpRequest.updateTopic(updatedTopic);
+      if (response.status === 200) {
+        await updateTopics();
+      } else {
+        return { error: 'Edit failed. '};
+      }
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response?.data) {
+        return err.response.data;
+      }
     }
   };
 
@@ -42,19 +59,6 @@ const Topics = () => {
       }
     } catch (err) {
       console.log('Deletion failed');
-    }
-  };
-
-  const handleTopicEdit = async (updatedTopic: Topic) => {
-    try {
-      const response = await TopicListHttpRequest.updateTopic(updatedTopic);
-      if (response.status === 200) {
-        await updateTopics();
-      } else {
-        throw new Error();
-      }
-    } catch (err) {
-      console.log('Edit failed');
     }
   };
 
@@ -76,11 +80,11 @@ const Topics = () => {
                 <TopicDetails
                   key={topic._id}
                   topic={topic}
-                  onTopicEdit={(updatedTopic: Topic) => {
+                  onTopicEdit={async (updatedTopic: Topic) => {
                     if (updatedTopic._id !== topic._id) {
                       throw new Error('Edit failed.');
                     }
-                    handleTopicEdit(updatedTopic);
+                    return await handleTopicEdit(updatedTopic);
                   }}
                   onTopicDelete={() => handleTopicDelete(topic)}
                 />)

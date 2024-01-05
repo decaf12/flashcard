@@ -72,8 +72,9 @@ export const updateTopic: RequestHandler = (async (req: Request, res: Response):
       res.status(404).json({ error: 'No such topic.' });
     }
   } catch (err) {
-    if (err instanceof Error) {
-      res.status(400).json({ error: err.message });
+    if (err instanceof Error && 'code' in err) {
+      const message = err.code === 11000 ? 'A topic with this name alraedy exists.' : err.message;
+      res.status(400).json({ error: message });
     }
   }
 }) as RequestHandler;
@@ -97,8 +98,9 @@ export const deleteTopic: RequestHandler = (async (req: Request, res: Response):
       res.status(404).json({ error: 'No such topic.' });
     }
   } catch (err) {
-    if (err instanceof Error) {
-      res.status(400).json({ error: err.message });
+    if (err instanceof Error && 'code' in err) {
+      const message = err.code === 11000 ? 'A topic with this name alraedy exists.' : err.message;
+      res.status(400).json({ error: message });
     }
   }
 }) as RequestHandler;

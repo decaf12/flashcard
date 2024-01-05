@@ -44,6 +44,25 @@ const Decks = () => {
     }
   };
   
+  const handleDeckEdit = async (updatedDeck: Deck) => {
+    if (!topicId) {
+      return;
+    }
+
+    try {
+      const response = await DeckListHttpRequest.updateDeck(topicId, updatedDeck);
+      if (response.status === 200) {
+        await updateDecks();
+      } else {
+        return { error: 'Edit failed. '};
+      }
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response?.data) {
+        return err.response.data;
+      }
+    }
+  };
+
   const handleDeckDelete = async (deck: Deck) => {
     if (!topicId) {
       return;
@@ -60,23 +79,6 @@ const Decks = () => {
       console.log('Deletion failed');
     }
   }
-
-  const handleDeckEdit = async (updatedDeck: Deck) => {
-    if (!topicId) {
-      return;
-    }
-
-    try {
-      const response = await DeckListHttpRequest.updateDeck(topicId, updatedDeck);
-      if (response.status === 200) {
-        await updateDecks();
-      } else {
-        throw new Error();
-      }
-    } catch (err) {
-      console.log('Edit failed');
-    }
-  };
 
   useEffect(() => {
     if (loggedInAs) {
@@ -101,11 +103,11 @@ const Decks = () => {
                 <DeckDetails
                   key={deck._id}
                   deck={deck}
-                  onDeckEdit={(updatedDeck: Deck) => {
+                  onDeckEdit={async (updatedDeck: Deck) => {
                     if (updatedDeck._id !== deck._id) {
                       throw new Error('Edit failed.');
                     }
-                    handleDeckEdit(updatedDeck);
+                    return await handleDeckEdit(updatedDeck);
                   }}
                   onDeckDelete={() => handleDeckDelete(deck)}
                 />)

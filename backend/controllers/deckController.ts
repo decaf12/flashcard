@@ -42,8 +42,9 @@ export const createDeck: RequestHandler = (async (req: Request, res: Response): 
     const newDeck = await deckCollection.create({ topicId, deckName });
     res.status(200).json(newDeck);
   } catch (err) {
-    if (err instanceof Error) {
-      res.status(400).json({ error: err.message });
+    if (err instanceof Error && 'code' in err) {
+      const message = err.code === 11000 ? 'A deck with this name alraedy exists.' : err.message;
+      res.status(400).json({ error: message });
     }
   }
 }) as RequestHandler;
@@ -81,8 +82,9 @@ export const updateDeck: RequestHandler = (async (req: Request, res: Response): 
       res.status(404).json({ error: 'No such deck.' });
     }
   } catch (err) {
-    if (err instanceof Error) {
-      res.status(400).json({ error: err.message });
+    if (err instanceof Error && 'code' in err) {
+      const message = err.code === 11000 ? 'A deck with this name alraedy exists.' : err.message;
+      res.status(400).json({ error: message });
     }
   }
 }) as RequestHandler;

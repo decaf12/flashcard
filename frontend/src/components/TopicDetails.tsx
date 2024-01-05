@@ -7,12 +7,16 @@ const TopicDetails = ({ topic, onTopicEdit, onTopicDelete: onTopicDeletion }:
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(topic.topicName);
   const [draftName, setDraftName] = useState(topic.topicName);
+  const [error, setError] = useState(null as any);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await onTopicEdit({ ...topic, topicName: draftName });
-    setName(draftName);
-    setIsEditing(false);
+    const status = await onTopicEdit({ ...topic, topicName: draftName });
+    setError(status);
+    if (!status) {
+      setName(draftName);
+      setIsEditing(false);
+    }
   };
 
   return (
@@ -43,6 +47,7 @@ const TopicDetails = ({ topic, onTopicEdit, onTopicDelete: onTopicDeletion }:
         : <span className='material-symbols-outlined' onClick={() => setIsEditing(true)}>edit</span> }
 
       <span className='material-symbols-outlined' onClick={onTopicDeletion}>delete</span>
+      { error?.error && <div className='error'>{error.error}</div> }
     </div>
   );
 };
