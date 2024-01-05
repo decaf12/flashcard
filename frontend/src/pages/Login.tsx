@@ -1,10 +1,10 @@
-import React, { FormEvent, FormEventHandler, useState } from 'react';
+import { FormEvent, FormEventHandler, useState } from 'react';
 import { useLogin } from '../hooks/useLogin';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { login, error, isLoading } = useLogin();
+  const { login, error, isLoading }: { login: Function, error: any, isLoading: boolean } = useLogin();
 
   const handleSubmit = (async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -29,7 +29,7 @@ const Login = () => {
       />
 
       <button disabled={isLoading}>Log in</button>
-      {error && 'error' in error && <div className='error'>{error['error']}</div>}
+      { error?.error && <div className='error'>{error.error}</div> }
     </form>
   );
 };

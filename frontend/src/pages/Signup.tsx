@@ -4,7 +4,7 @@ import { useSignup } from '../hooks/useSignup';
 const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { signup, error, isLoading } = useSignup();
+  const { signup, error, isLoading }: { signup: Function, error: any, isLoading: boolean } = useSignup();
 
   const handleSubmit = (async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -29,7 +29,7 @@ const Signup = () => {
       />
 
       <button disabled={isLoading}>Sign up</button>
-      {error && 'error' in error && <div className='error'>{error['error']}</div>}
+      { error?.error && <div className='error'>{error.error}</div> }
     </form>
   );
 };

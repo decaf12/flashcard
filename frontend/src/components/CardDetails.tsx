@@ -25,7 +25,7 @@ const CardDetails = ({ card, onCardEdit, onCardDelete }:
   };
 
   return (
-    <div className="topic-details">
+    <div className="item-details">
       <h4>{showQuestion ? card.question : card.answer}</h4>
       { isEditing
         ? <form className="create" onSubmit={handleSubmit}>
@@ -45,6 +45,7 @@ const CardDetails = ({ card, onCardEdit, onCardDelete }:
             <button onClick={(e) => {
               e.preventDefault();
               setIsEditing(false);
+              setError(null);
             }}>
               Cancel
             </button>

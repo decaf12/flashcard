@@ -5,6 +5,7 @@ import Decks from './pages/Decks';
 import Cards from './pages/Cards';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import Navbar from './components/Navbar';
 
 function App() {
   const { loggedInAs } = useAuthContext();
@@ -12,7 +13,7 @@ function App() {
   
   return (
     <div className="App">
-        {/* <Navbar /> */}
+        <Navbar />
         <div className="pages">
           <Routes>
             <Route

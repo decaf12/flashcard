@@ -21,7 +21,7 @@ const DeckDetails = ({ deck, onDeckEdit, onDeckDelete }:
   };
 
   return (
-    <div className="topic-details">
+    <div className="item-details">
       { !isEditing
         ? <Link to={`/topics/${topicId}/decks/${deck._id}/cards`}>
             <h4>{name}</h4>
@@ -41,6 +41,7 @@ const DeckDetails = ({ deck, onDeckEdit, onDeckDelete }:
               e.preventDefault();
               setDraftName(name);
               setIsEditing(false);
+              setError(null);
             }}>
               Cancel
             </button>
